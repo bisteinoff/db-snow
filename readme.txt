@@ -27,5 +27,8 @@ You don't need to deactivate it. On the settings page in the admin panel you hav
 
 == Changelog ==
 
+= 1.1 =
+* Form in admin panel
+
 = 1.0 =
 * Initial release.

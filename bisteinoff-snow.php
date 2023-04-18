@@ -3,7 +3,7 @@
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
 Description: The plugin generates snowflakes falling down on the foreground of the pages of the website
-Version: 1.0
+Version: 1.1
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 License: GPL2
@@ -58,26 +58,36 @@ License: GPL2
 			$db_snow_finish_day = (int) get_option('db_snow_finish_day');
 			$db_snow_finish_month = (int) get_option('db_snow_finish_month');
 			$db_this_year = date("Y");
-			echo $db_date1 = $db_this_year
-				. "-"
-				. ($db_snow_start_month < 10 ? $db_snow_start_month = '0' . $db_snow_start_month : $db_snow_start_month)
-				. "-"
-				. ($db_snow_start_day < 10 ? $db_snow_start_day = '0' . $db_snow_start_day : $db_snow_start_day) . " ";
-			echo $db_date2 = $db_this_year
-				. "-"
-				. ($db_snow_finish_month < 10 ? $db_snow_finish_month = '0' . $db_snow_finish_month : $db_snow_finish_month)
-				. "-"
-				. ($db_snow_finish_day < 10 ? $db_snow_finish_day = '0' . $db_snow_finish_day : $db_snow_finish_day) . " ";
-			echo $db_today = date("Y-m-d");
 
-			if ($db_date1 > $db_date2)
+			$db_date1 = $db_this_year
+				. "-"
+				. ( $db_snow_start_month < 10 ? $db_snow_start_month = '0' . $db_snow_start_month : $db_snow_start_month )
+				. "-"
+				. ( $db_snow_start_day < 10 ? $db_snow_start_day = '0' . $db_snow_start_day : $db_snow_start_day );
+
+			$db_date2 = "-"
+				. ( $db_snow_finish_month < 10 ? $db_snow_finish_month = '0' . $db_snow_finish_month : $db_snow_finish_month )
+				. "-"
+				. ( $db_snow_finish_day < 10 ? $db_snow_finish_day = '0' . $db_snow_finish_day : $db_snow_finish_day );
+
+			$db_today = date( "Y-m-d" );
+
+			$db_date2 = ( $db_date1 > $db_this_year . $db_date2 ? ( $db_this_year + 1 ) . $db_date2 : $db_this_year . $db_date2 );
+            
+            $db_today = "2024-01-01";
+
+
+			if ( $db_today >= $db_date1 && $db_today <= $db_date2 )
 			{
-				?>
-				<script type="text/javascript" src="/js/snow.js"></script>
-				<?php
+
+				if ( !is_admin() ) wp_enqueue_script( 'db-snow', $this->pluginUrl() . 'js/snow.js', null, null, true );
+				add_action( 'admin_footer', function() {
+								wp_enqueue_style( 'db-snow', $this->pluginUrl() . 'css/admin.css' );
+							},
+							99
+				);
 
 			}
-
 
 		}
 
