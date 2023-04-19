@@ -3,7 +3,7 @@
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
 Description: The plugin generates snowflakes falling down on the foreground of the pages of the website
-Version: 1.1
+Version: 1.2
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 License: GPL2
@@ -45,13 +45,29 @@ License: GPL2
 		function dbSnow()
 		{
 
-			add_option('db_snow_start_day', '1');
-			add_option('db_snow_start_month', '12');
-			add_option('db_snow_finish_day', '29');
-			add_option('db_snow_finish_month', '2');
+			add_option( 'db_snow_start_day', '1' );
+			add_option( 'db_snow_start_month', '12' );
+			add_option( 'db_snow_finish_day', '29' );
+			add_option( 'db_snow_finish_month', '2' );
+			add_option( 'db_snow_max_number', '50' );
+			add_option( 'db_snow_min_size', '10' );
+			add_option( 'db_snow_max_size', '40' );
+			add_option( 'db_snow_color_1', '#b9e0f5' );
+			add_option( 'db_snow_color_2', '#7ec8ff' );
+			add_option( 'db_snow_color_3', '#7eb0ff' );
+			add_option( 'db_snow_color_4', '#8ab4ff' );
+			add_option( 'db_snow_color_5', '#afd0f5' );
 
 			add_filter( 'plugin_action_links_db-snow/bisteinoff-snow.php', array(&$this, 'db_settings_link') );
 			add_action( 'admin_menu', array (&$this, 'admin') );
+
+			add_action( 'admin_footer', function() {
+							wp_enqueue_style( 'db-snow-admin', $this->pluginUrl() . 'css/admin.css' );
+							wp_enqueue_script( 'db-snow-admin', $this->pluginUrl() . 'js/admin.js', array( 'wp-color-picker' ), false, true );
+							wp_enqueue_style( 'wp-color-picker' );
+						},
+						99
+			);
 
 			$db_snow_start_day = (int) get_option('db_snow_start_day');
 			$db_snow_start_month = (int) get_option('db_snow_start_month');
@@ -78,16 +94,11 @@ License: GPL2
 
 
 			if ( $db_today >= $db_date1 && $db_today <= $db_date2 )
-			{
-
-				if ( !is_admin() ) wp_enqueue_script( 'db-snow', $this->pluginUrl() . 'js/snow.js', null, null, true );
-				add_action( 'admin_footer', function() {
-								wp_enqueue_style( 'db-snow', $this->pluginUrl() . 'css/admin.css' );
-							},
-							99
-				);
-
-			}
+				if ( !is_admin() )
+					{
+						wp_enqueue_script( 'db-snow', $this->pluginUrl() . 'js/snow.js', null, null, true );
+						add_action( 'wp_footer', array (&$this, 'footer_js') );
+					}
 
 		}
 
@@ -170,6 +181,36 @@ License: GPL2
 
 			return $links;
 
+		}
+
+		function footer_js()
+		{
+
+			$db_snow_max_number = (int) get_option( 'db_snow_max_number' );
+			$db_snow_min_size = (int) get_option( 'db_snow_min_size' );
+			$db_snow_max_size = (int) get_option( 'db_snow_max_size' );
+			$db_snow_colors = array(
+				'Colors',
+				sanitize_hex_color ( get_option('db_snow_color_1') ),
+				sanitize_hex_color ( get_option('db_snow_color_2') ),
+				sanitize_hex_color ( get_option('db_snow_color_3') ),
+				sanitize_hex_color ( get_option('db_snow_color_4') ),
+				sanitize_hex_color ( get_option('db_snow_color_5') )
+			);
+
+		?><script type="text/javascript">
+
+			let dbSnowFlakesMaxNumber = <?php echo $db_snow_max_number; ?>;
+			let dbSnowFlakesMinSize = <?php echo $db_snow_min_size; ?>;
+			let dbSnowFlakesMaxSize = <?php echo $db_snow_max_size; ?>;
+
+			let dbSnowFlakesColors = new Array('Colors'<?php
+				for ( $i = 1; $i <= 5; $i++ )
+					echo ",'{$db_snow_colors[ $i ]}'"; 
+			?>);
+
+		</script><?php
+			
 		}
 
 	}

@@ -3,14 +3,20 @@
 	$db_local = get_locale();
 	setlocale ( LC_TIME, "{$db_local}.utf8" );
 
-	$db_snow_start_day = (int) get_option('db_snow_start_day');
-	$db_snow_start_month = (int) get_option('db_snow_start_month');
-	$db_snow_finish_day = (int) get_option('db_snow_finish_day');
-	$db_snow_finish_month = (int) get_option('db_snow_finish_month');
-
-	$db_calendar = Array (
-		Array ('Month', '', '', '', '', '', '', '', '', '', '', '', ''),
-		Array ()
+	$db_snow_start_day = (int) get_option( 'db_snow_start_day' );
+	$db_snow_start_month = (int) get_option( 'db_snow_start_month' );
+	$db_snow_finish_day = (int) get_option( 'db_snow_finish_day' );
+	$db_snow_finish_month = (int) get_option( 'db_snow_finish_month' );
+	$db_snow_max_number = (int) get_option( 'db_snow_max_number' );
+	$db_snow_min_size = (int) get_option( 'db_snow_min_size' );
+	$db_snow_max_size = (int) get_option( 'db_snow_max_size' );
+	$db_snow_colors = array(
+		'Colors',
+		sanitize_hex_color ( get_option('db_snow_color_1') ),
+		sanitize_hex_color ( get_option('db_snow_color_2') ),
+		sanitize_hex_color ( get_option('db_snow_color_3') ),
+		sanitize_hex_color ( get_option('db_snow_color_4') ),
+		sanitize_hex_color ( get_option('db_snow_color_5') )
 	);
 
 	if ( isset ( $_POST['submit'] ) )
@@ -24,40 +30,57 @@
 			check_admin_referrer('db_snow_form');
 
 		// Start on
-		$db_snow_start_day = (int) $_POST['start_day'];
-		update_option( 'db_snow_start_day', $db_snow_start_day );
-		$db_snow_start_month = (int) $_POST['start_month'];
-		update_option( 'db_snow_start_month', $db_snow_start_month );
+		if ( $_POST['start_day'] > 0 && $_POST['start_month'] > 0 )
+		{
+			$db_snow_start_day = (int) $_POST['start_day'];
+			update_option( 'db_snow_start_day', $db_snow_start_day );
+			$db_snow_start_month = (int) $_POST['start_month'];
+			update_option( 'db_snow_start_month', $db_snow_start_month );
+		}
 
 		// Stop on
-		$db_snow_finish_day = (int) $_POST['finish_day'];
-		update_option( 'db_snow_finish_day', $db_snow_finish_day );
-		$db_snow_finish_month = (int) $_POST['finish_month'];
-		update_option( 'db_snow_finish_month', $db_snow_finish_month );
+		if ( $_POST['finish_day'] > 0 && $_POST['finish_month'] > 0 )
+		{
+			$db_snow_finish_day = (int) $_POST['finish_day'];
+			update_option( 'db_snow_finish_day', $db_snow_finish_day );
+			$db_snow_finish_month = (int) $_POST['finish_month'];
+			update_option( 'db_snow_finish_month', $db_snow_finish_month );
+		}
 
-/*
-		// Font size
-		if ( $_POST['fontsize'] !== '' )
-			$fontsize = (float) $_POST['fontsize'];
-		else
-			$fontsize = '';
-		update_option ( 'db_tagcloud_fontsize', $fontsize );
+		// Max Number
+		if ( $_POST['max_number'] >= 0 )
+		{
+			$db_snow_max_number = (int) $_POST['max_number'];
+			update_option ( 'db_snow_max_number', $db_snow_max_number );
+		}
 
-		// Font weight
-		$fontweight = (int) $_POST['fontweight'];
-		update_option ( 'db_tagcloud_fontweight', $fontweight );
+		// Min and Max Size
+		if ( $_POST['min_size'] >= 0 )
+		{
+			$db_snow_min_size = (int) $_POST['min_size'];
+			update_option ( 'db_snow_min_size', $db_snow_min_size );
+		}
 
-		// Border width
-		if ( $_POST['borderwidth'] !== '' )
-			$borderwidth = (float) $_POST['borderwidth'];
-		else
-			$borderwidth = '';
-		update_option ( 'db_tagcloud_borderwidth', $borderwidth );
+		if ( $_POST['max_size'] >= 0 )
+		{
+			$db_snow_max_size = (int) $_POST['max_size'];
+			update_option ( 'db_snow_max_size', $db_snow_max_size );
+		}
 
-		// Color
-		$color = sanitize_hex_color ( $_POST['color'] );
-		update_option( 'db_tagcloud_color', $color );
-*/
+		if ( $_POST['min_size'] >= 0 && $_POST['max_size'] >= 0 && $db_snow_min_size > $db_snow_max_size )
+		{
+			update_option ( 'db_snow_min_size', $db_snow_max_size );
+			update_option ( 'db_snow_max_size', $db_snow_min_size );
+		}
+
+
+		// Colors
+		for ( $i = 1; $i <= 5; $i++ )
+		{
+			$db_snow_colors[ $i ] = sanitize_hex_color ( $_POST["color_{$i}"] );
+			update_option( 'db_snow_color_' . $i , $db_snow_colors[ $i ] );
+		}
+
 	}
 
 ?>
@@ -115,10 +138,10 @@
 				</th>
 			</tr>
 			<tr valign="top">
-				<th scope="row" width="20%">
+				<th scope="row">
 					<?php _e('Stop on' , 'dbSnowFlakes') ?>
 				</th>
-				<td width="10%">
+				<td>
 					<select type="text" name="finish_day" id="db_snow_finish_day">
 						<option value="0" disabled><?php _e('Day' , 'dbSnowFlakes') ?></option>
 					<?php
@@ -131,7 +154,7 @@
 					?>
 					</select>
 				</td>
-				<td width="10%">
+				<td>
 					<select type="text" name="finish_month" id="db_snow_finish_month">
 						<option value="0" disabled><?php _e('Month' , 'dbSnowFlakes') ?></option>
 					<?php
@@ -143,6 +166,88 @@
 						}
 					?>
 					</select>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="rowgroup" rowspan="3">
+					<?php _e('Parameters' , 'dbSnowFlakes') ?>
+					<div class="db-snow-field-description"><?php _e('Customization of the performance of the snowflakes' , 'dbSnowFlakes') ?></div>
+				</th>
+				<th scope="row">
+					<?php _e('Maximum number of snowflakes' , 'dbSnowFlakes') ?>
+				</th>
+				<td>
+					<input type="text" name="max_number" id="db_snow_max_number"
+							size="5" value="<?php echo $db_snow_max_number; ?>" />
+				</td>
+				<td rowspan="8" id="db_snow_preview">
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Minimum Size' , 'dbSnowFlakes') ?>
+				</th>
+				<td>
+					<input type="text" name="min_size" id="db_snow_min_size"
+							size="5" value="<?php echo $db_snow_min_size; ?>" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Maximum Size' , 'dbSnowFlakes') ?>
+				</th>
+				<td>
+					<input type="text" name="max_size" id="db_snow_max_size"
+							size="5" value="<?php echo $db_snow_max_size; ?>" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="rowgroup" rowspan="5">
+					<?php _e('Colors' , 'dbSnowFlakes') ?>
+					<div class="db-snow-field-description"><?php _e('Choose 5 colors of the snowflakes. The color of every other snowflake will be chosen randomly from these five ones' , 'dbSnowFlakes') ?></div>
+				</th>
+				<th scope="row">
+					<?php _e('Color' , 'dbSnowFlakes') ?> 1
+				</th>
+				<td id="db_snow_color_inner">
+					<input type="text" name="color_1" id="db_snow_color_1" class="db-snow-color"
+							size="7" value="<?php echo $db_snow_colors[1]; ?>" data-default-color="#b9e0f5" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Color' , 'dbSnowFlakes') ?> 2
+				</th>
+				<td id="db_snow_color_inner">
+					<input type="text" name="color_2" id="db_snow_color_2" class="db-snow-color"
+							size="7" value="<?php echo $db_snow_colors[2]; ?>" data-default-color="#7ec8ff" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Color' , 'dbSnowFlakes') ?> 3
+				</th>
+				<td id="db_snow_color_inner">
+					<input type="text" name="color_3" id="db_snow_color_3" class="db-snow-color"
+							size="7" value="<?php echo $db_snow_colors[3]; ?>" data-default-color="#7eb0ff" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Color' , 'dbSnowFlakes') ?> 4
+				</th>
+				<td id="db_snow_color_inner">
+					<input type="text" name="color_4" id="db_snow_color_4" class="db-snow-color"
+							size="7" value="<?php echo $db_snow_colors[4]; ?>" data-default-color="#8ab4ff" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Color' , 'dbSnowFlakes') ?> 5
+				</th>
+				<td id="db_snow_color_inner">
+					<input type="text" name="color_5" id="db_snow_color_5" class="db-snow-color"
+							size="7" value="<?php echo $db_snow_colors[5]; ?>" data-default-color="#afd0f5" />
 				</td>
 			</tr>
 		</table>
