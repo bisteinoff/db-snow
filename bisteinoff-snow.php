@@ -3,7 +3,7 @@
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
 Description: The plugin generates snowflakes falling down on the foreground of the pages of the website
-Version: 1.2
+Version: 1.2.1
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 License: GPL2
@@ -31,17 +31,6 @@ License: GPL2
 
 		public $baseUrl;
 
-		function pluginUrl()
-		{
-
-			if (function_exists (plugins_url) )
-				$this->baseUrl = plugins_url ('/db-snow/');
-			else
-				$this->baseUrl = get_option('siteurl') . '/wp-content/plugins/db-snow/';
-
-			return $this->baseUrl;
-		}
-
 		function dbSnow()
 		{
 
@@ -62,8 +51,8 @@ License: GPL2
 			add_action( 'admin_menu', array (&$this, 'admin') );
 
 			add_action( 'admin_footer', function() {
-							wp_enqueue_style( 'db-snow-admin', $this->pluginUrl() . 'css/admin.css' );
-							wp_enqueue_script( 'db-snow-admin', $this->pluginUrl() . 'js/admin.js', array( 'wp-color-picker' ), false, true );
+							wp_enqueue_style( 'db-snow-admin', plugin_dir_url( __FILE__ ) . 'css/admin.css' );
+							wp_enqueue_script( 'db-snow-admin', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'wp-color-picker' ), false, true );
 							wp_enqueue_style( 'wp-color-picker' );
 						},
 						99
@@ -96,7 +85,7 @@ License: GPL2
 			if ( $db_today >= $db_date1 && $db_today <= $db_date2 )
 				if ( !is_admin() )
 					{
-						wp_enqueue_script( 'db-snow', $this->pluginUrl() . 'js/snow.js', null, null, true );
+						wp_enqueue_script( 'db-snow', plugin_dir_url( __FILE__ ) . 'js/snow.js', null, null, true );
 						add_action( 'wp_footer', array (&$this, 'footer_js') );
 					}
 
