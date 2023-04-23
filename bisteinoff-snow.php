@@ -3,7 +3,7 @@
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
 Description: The plugin generates snowflakes falling down on the foreground of the pages of the website
-Version: 1.2.1
+Version: 1.3
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 License: GPL2
@@ -41,6 +41,7 @@ License: GPL2
 			add_option( 'db_snow_max_number', '50' );
 			add_option( 'db_snow_min_size', '10' );
 			add_option( 'db_snow_max_size', '40' );
+			add_option( 'db_snow_speed', '0.5' );
 			add_option( 'db_snow_color_1', '#b9e0f5' );
 			add_option( 'db_snow_color_2', '#7ec8ff' );
 			add_option( 'db_snow_color_3', '#7eb0ff' );
@@ -64,8 +65,7 @@ License: GPL2
 			$db_snow_finish_month = (int) get_option('db_snow_finish_month');
 			$db_this_year = date("Y");
 
-			$db_date1 = $db_this_year
-				. "-"
+			$db_date1 = "-"
 				. ( $db_snow_start_month < 10 ? $db_snow_start_month = '0' . $db_snow_start_month : $db_snow_start_month )
 				. "-"
 				. ( $db_snow_start_day < 10 ? $db_snow_start_day = '0' . $db_snow_start_day : $db_snow_start_day );
@@ -77,12 +77,16 @@ License: GPL2
 
 			$db_today = date( "Y-m-d" );
 
-			$db_date2 = ( $db_date1 > $db_this_year . $db_date2 ? ( $db_this_year + 1 ) . $db_date2 : $db_this_year . $db_date2 );
-            
-            $db_today = "2024-01-01";
-
-
-			if ( $db_today >= $db_date1 && $db_today <= $db_date2 )
+			if (
+				// date 1 is earlier than date 2
+				$db_this_year . $db_date1 < $db_this_year . $db_date2 && $db_today >= $db_this_year . $db_date1 && $db_today <= $db_this_year . $db_date2 ||
+				// date 1 is later than date 2
+				$db_this_year . $db_date1 > $db_this_year &&
+					(
+						$db_today >= ( $db_this_year - 1) . $db_date1 && $db_today <= $db_this_year . $db_date2 ||
+						$db_today >= $db_this_year . $db_date1 && $db_today <= ( $db_this_year + 1) . $db_date2
+					)
+				)
 				if ( !is_admin() )
 					{
 						wp_enqueue_script( 'db-snow', plugin_dir_url( __FILE__ ) . 'js/snow.js', null, null, true );
@@ -178,6 +182,7 @@ License: GPL2
 			$db_snow_max_number = (int) get_option( 'db_snow_max_number' );
 			$db_snow_min_size = (int) get_option( 'db_snow_min_size' );
 			$db_snow_max_size = (int) get_option( 'db_snow_max_size' );
+			$db_snow_speed = (float) get_option( 'db_snow_speed' );
 			$db_snow_colors = array(
 				'Colors',
 				sanitize_hex_color ( get_option('db_snow_color_1') ),
@@ -192,6 +197,7 @@ License: GPL2
 			let dbSnowFlakesMaxNumber = <?php echo $db_snow_max_number; ?>;
 			let dbSnowFlakesMinSize = <?php echo $db_snow_min_size; ?>;
 			let dbSnowFlakesMaxSize = <?php echo $db_snow_max_size; ?>;
+			let dbSnowFlakesSpeed = <?php echo $db_snow_speed; ?>;
 
 			let dbSnowFlakesColors = new Array('Colors'<?php
 				for ( $i = 1; $i <= 5; $i++ )
