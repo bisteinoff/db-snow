@@ -10,6 +10,7 @@
 	$db_snow_max_number = (int) get_option( 'db_snow_max_number' );
 	$db_snow_min_size = (int) get_option( 'db_snow_min_size' );
 	$db_snow_max_size = (int) get_option( 'db_snow_max_size' );
+	$db_snow_speed = (float) get_option( 'db_snow_speed' );
 	$db_snow_colors = array(
 		'Colors',
 		sanitize_hex_color ( get_option('db_snow_color_1') ),
@@ -71,6 +72,13 @@
 		{
 			update_option ( 'db_snow_min_size', $db_snow_max_size );
 			update_option ( 'db_snow_max_size', $db_snow_min_size );
+		}
+
+		// Speed
+		if ( $_POST['speed'] >= 0 )
+		{
+			$db_snow_speed = (float) $_POST['speed'];
+			update_option ( 'db_snow_speed', $db_snow_speed );
 		}
 
 
@@ -169,7 +177,7 @@
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="rowgroup" rowspan="3">
+				<th scope="rowgroup" rowspan="4">
 					<?php _e('Parameters' , 'dbSnowFlakes') ?>
 					<div class="db-snow-field-description"><?php _e('Customization of the performance of the snowflakes' , 'dbSnowFlakes') ?></div>
 				</th>
@@ -180,7 +188,7 @@
 					<input type="text" name="max_number" id="db_snow_max_number"
 							size="5" value="<?php echo $db_snow_max_number; ?>" />
 				</td>
-				<td rowspan="8" id="db_snow_preview">
+				<td rowspan="9" id="db_snow_preview">
 				</td>
 			</tr>
 			<tr valign="top">
@@ -199,6 +207,18 @@
 				<td>
 					<input type="text" name="max_size" id="db_snow_max_size"
 							size="5" value="<?php echo $db_snow_max_size; ?>" />
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row" class="db-snow-after-rowspan">
+					<?php _e('Speed' , 'dbSnowFlakes') ?>
+				</th>
+				<td>
+					<div id="db_snow_speed_value"></div>
+					<div class="db-snow-input-range">
+						<input type="range" name="speed" id="db_snow_speed"
+								size="5" min="0.1" max="2" step="0.01" value="<?php echo $db_snow_speed; ?>" />
+					</div>
 				</td>
 			</tr>
 			<tr valign="top">

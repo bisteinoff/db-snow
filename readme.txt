@@ -2,9 +2,9 @@
 Contributors: Denis Bisteinov
 Donate link: https://bisteinoff.com
 Tags: snow, snowflakes, falling snow
-Requires at least: 4.0
+Requires at least: 4.6
 Tested up to: 6.2
-Stable tag: 1.3
+Stable tag: 1.4
 License: GPL2
 
 The plugin generates snowflakes falling down on the foreground of the pages of the website.
@@ -26,6 +26,10 @@ DB Falling Snowflakes is an easy solution to generate snowflakes falling down on
 You don't need to deactivate it. On the settings page in the admin panel you have the option to choose the period of its activity. Out of the period of time no script will be aplied. So, next season the snowflakes will start falling automatically according to the settings that you had made.
 
 == Changelog ==
+
+= 1.4 =
+* New option: speed of flakes
+* Compatible with GlotPress
 
 = 1.3 =
 * Script for falling snowflakes

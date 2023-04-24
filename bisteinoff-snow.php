@@ -3,7 +3,7 @@
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
 Description: The plugin generates snowflakes falling down on the foreground of the pages of the website
-Version: 1.3
+Version: 1.4
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 License: GPL2
@@ -81,7 +81,7 @@ License: GPL2
 				// date 1 is earlier than date 2
 				$db_this_year . $db_date1 < $db_this_year . $db_date2 && $db_today >= $db_this_year . $db_date1 && $db_today <= $db_this_year . $db_date2 ||
 				// date 1 is later than date 2
-				$db_this_year . $db_date1 > $db_this_year &&
+				$db_this_year . $db_date1 > $db_this_year . $db_date2 &&
 					(
 						$db_today >= ( $db_this_year - 1) . $db_date1 && $db_today <= $db_this_year . $db_date2 ||
 						$db_today >= $db_this_year . $db_date1 && $db_today <= ( $db_this_year + 1) . $db_date2
