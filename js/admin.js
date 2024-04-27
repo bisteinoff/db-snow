@@ -31,3 +31,29 @@ function SpeedInputRange(min, max) {
     outputSpeed.innerHTML = speed;
     outputSpeed.style.marginLeft = "calc(" + range * 100 + "% + " + margin + "px)";
 }
+
+/* Opacity Input Range */
+
+let inputOpacity = document.getElementById("db_snow_opacity");
+let outputOpacity = document.getElementById("db_snow_opacity_value");
+let minOpacity = 0
+let maxOpacity = 1
+
+outputOpacity.innerHTML = inputOpacity.value;
+
+inputOpacity.addEventListener('input', function(){
+    OpacityInputRange(minOpacity, maxOpacity)
+});
+window.addEventListener('load', function(){
+    OpacityInputRange(minOpacity, maxOpacity)
+});
+
+function OpacityInputRange(min, max) {
+    let opacity = inputOpacity.value
+    let width = outputOpacity.offsetWidth
+    let range = ( opacity - min ) / ( max - min )
+    let margin = ( range - 0.5 ) * ( width - 62 ) - 22
+
+    outputOpacity.innerHTML = opacity;
+    outputOpacity.style.marginLeft = "calc(" + range * 100 + "% + " + margin + "px)";
+}

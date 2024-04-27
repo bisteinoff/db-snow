@@ -2,15 +2,15 @@
 /*
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
-Description: The plugin generates snowflakes falling down on the foreground of the pages of the website
-Version: 1.5
+Description: Add snow falling animation to your website. Personal settings to make your own style of snowflakes and their movement. Once installed the plugin will run only during the period of time that you set.
+Version: 1.6
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 Text Domain: db-falling-snowflakes
 License: GPL2
 */
 
-/*  Copyright 2023 Denis BISTEINOV  (email : bisteinoff@gmail.com)
+/*  Copyright 2024 Denis BISTEINOV  (email : bisteinoff@gmail.com)
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -53,13 +53,14 @@ License: GPL2
 			add_option( 'db_snow_color_3', '#7eb0ff' );
 			add_option( 'db_snow_color_4', '#8ab4ff' );
 			add_option( 'db_snow_color_5', '#afd0f5' );
+			add_option( 'db_snow_opacity', '0.5' );
 
 			add_filter( 'plugin_action_links_' . $this -> thisdir() . '/bisteinoff-snow.php', array(&$this, 'db_settings_link') );
 			add_action( 'admin_menu', array (&$this, 'admin') );
 
 			add_action( 'admin_footer', function() {
-							wp_enqueue_style( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'css/admin.css' );
-							wp_enqueue_script( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'wp-color-picker' ), false, true );
+							wp_enqueue_style( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'css/admin.min.css' );
+							wp_enqueue_script( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'js/admin.min.js', array( 'wp-color-picker' ), false, true );
 							wp_enqueue_style( 'wp-color-picker' );
 						},
 						99
@@ -95,7 +96,7 @@ License: GPL2
 				)
 				if ( !is_admin() )
 					{
-						wp_enqueue_script( $this -> thisdir(), plugin_dir_url( __FILE__ ) . 'js/snow.js', null, null, true );
+						wp_enqueue_script( $this -> thisdir(), plugin_dir_url( __FILE__ ) . 'js/snow.min.js', null, null, true );
 						add_action( 'wp_footer', array (&$this, 'footer_js') );
 					}
 
@@ -142,8 +143,8 @@ License: GPL2
 				</svg>';
 
 				add_menu_page(
-					__('DB Snow Flakes Settings' , 'db-falling-snowflakes' ),
-					__('DB Snow Flakes' , 'db-falling-snowflakes' ),
+					esc_html__('DB Snow Flakes Settings' , 'db-falling-snowflakes' ),
+					esc_html__('DB Snow Flakes' , 'db-falling-snowflakes' ),
 					'manage_options',
 					$this -> thisdir(),
 					array (&$this, 'admin_page_callback'),
@@ -171,7 +172,7 @@ License: GPL2
 				get_admin_url() . 'admin.php'
 			) );
 
-			$settings_link = "<a href='$url'>" . __( 'Settings' ) . '</a>';
+			$settings_link = "<a href='$url'>" . esc_html__( 'Settings' ) . '</a>';
 
 			array_push(
 				$links,
@@ -197,6 +198,7 @@ License: GPL2
 				get_option( 'db_snow_color_4' ),
 				get_option( 'db_snow_color_5' )
 			);
+			$db_snow_opacity = (float) get_option( 'db_snow_opacity' );
 
 		?><script type="text/javascript">
 
@@ -208,6 +210,7 @@ License: GPL2
 				for ( $i = 1; $i <= 5; $i++ )
 					echo ",'" . (string) esc_html ( sanitize_hex_color ( $db_snow_colors[ $i ] ) ) . "'"; 
 			?>);
+			let dbSnowFlakesOpacity = <?php echo esc_html ( sanitize_text_field ( $db_snow_opacity ) ); ?>;
 
 		</script><?php
 			

@@ -48,6 +48,7 @@ function dbSnowInit()
         dbSnow[i].posy = dbGetRandom ( dbMarginBottom, 2 * dbSnow[i].size )
         dbSnow[i].style.left = dbSnow[i].posx + 'px'
         dbSnow[i].style.top = dbSnow[i].posy + 'px'
+        dbSnow[i].style.opacity = dbSnowFlakesOpacity
 
         coord[i] = 0
         sway[i] = Math.random() * 15

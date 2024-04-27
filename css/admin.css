@@ -1,5 +1,15 @@
 /* DB Snow Flakes Admin Settings Page */
 
+.db-snow-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+[class*="db-snow-col-"] {
+    width: 100%;
+}
+
 .db-snow-admin h1 {
     font-size: 3em;
 }
@@ -9,9 +19,13 @@
     margin-top: 2em;
 }
 
+.db-snow-logo {
+    text-align: center;
+}
+
 .db-snow-description p {
     color: #525d65;
-    font-size: 1.5em;
+    font-size: 1.25em;
     margin: .5em 0;
 }
 
@@ -112,7 +126,8 @@
     height: 16px;
 }
 
-#db_snow_speed_value {
+#db_snow_speed_value,
+#db_snow_opacity_value {
     position: relative;
     display: inline-block;
     border: 1px solid #7ec8ff;
@@ -125,7 +140,8 @@
     width: 30px;
 }
 
-#db_snow_speed_value::after {
+#db_snow_speed_value::after,
+#db_snow_opacity_value::after {
     content: '';
     position: absolute;
     top: 100%;
@@ -138,4 +154,37 @@
     height: 5px;
     transform-origin: center;
     transform: translateY(-50%) rotate(135deg);
+}
+
+@media only screen and (min-width: 576px) {
+
+    .db-snow-row {
+        flex-wrap: nowrap;
+        gap: 40px;
+    }
+
+    .db-snow-col-4 {
+        width: 50%;
+    }
+
+    .db-snow-col-8 {
+        width: 50%;
+    }
+
+    .db-snow-logo {
+        text-align: end;
+    }
+
+}
+
+@media only screen and (min-width: 768px) {
+
+    .db-snow-col-4 {
+        width: 33.3333%;
+    }
+
+    .db-snow-col-8 {
+        width: 66.6667%;
+    }
+
 }
