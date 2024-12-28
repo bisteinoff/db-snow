@@ -3,8 +3,8 @@ Contributors: bisteinoff
 Donate link: https://bisteinoff.com
 Tags: snow, snowflakes, falling snow, snow effect, snow overlay
 Requires at least: 4.6
-Tested up to: 6.5
-Stable tag: 1.6
+Tested up to: 6.7
+Stable tag: 1.7
 License: GPL2
 
 Snow falling animation. Personal customization of snowflakes and their movement. The script runs only during the period of time you want.
@@ -47,6 +47,9 @@ The settings are individual for every subsite including the period of time.
 You can also activate the plugin only on several of the subsites if you don't need it on all of them.
 
 == Changelog ==
+
+= 1.7 =
+* Custom options for mobile devices
 
 = 1.6 =
 * New option: opacity

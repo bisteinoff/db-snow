@@ -126,8 +126,8 @@
     height: 16px;
 }
 
-#db_snow_speed_value,
-#db_snow_opacity_value {
+[id*="db_snow_speed_value"],
+[id*="db_snow_opacity_value"] {
     position: relative;
     display: inline-block;
     border: 1px solid #7ec8ff;
@@ -140,8 +140,8 @@
     width: 30px;
 }
 
-#db_snow_speed_value::after,
-#db_snow_opacity_value::after {
+[id*="db_snow_speed_value"]::after,
+[id*="db_snow_opacity_value"]::after {
     content: '';
     position: absolute;
     top: 100%;
