@@ -3,7 +3,7 @@
 Plugin Name: DB Falling Snowflakes
 Plugin URI: https://github.com/bisteinoff/db-snow
 Description: Add snow falling animation to your website. Personal settings to make your own style of snowflakes and their movement. Once installed the plugin will run only during the period of time that you set.
-Version: 1.7
+Version: 1.8
 Author: Denis Bisteinov
 Author URI: https://bisteinoff.com
 Text Domain: db-falling-snowflakes
@@ -26,60 +26,54 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'DB_SNOW_Settings' ) ) :
+if ( !class_exists( 'DB_SNOW_Settings' ) ) :
 
-	define( 'DB_FALLING_SNOWFLAKES_PLUGIN_VERSION', '1.7' );
+	define( 'DB_FALLING_SNOWFLAKES_PLUGIN_VERSION', '1.8' );
 
 	class DB_SNOW_Settings
 
 	{
 
-		function thisdir()
-		{
-			return basename( __DIR__ );
-		}
+		function __construct() {
 
-		function __construct()
-		{
-
-			add_option( 'db_snow_start_day', '1' );
-			add_option( 'db_snow_start_month', '12' );
-			add_option( 'db_snow_finish_day', '29' );
-			add_option( 'db_snow_finish_month', '2' );
+			add_option( 'db_snow_start_day',         '1'  );
+			add_option( 'db_snow_start_month',       '12' );
+			add_option( 'db_snow_finish_day',        '29' );
+			add_option( 'db_snow_finish_month',      '2'  );
 			add_option( 'db_snow_max_number_mobile', '20' );
 			add_option( 'db_snow_max_number_tablet', '35' );
-			add_option( 'db_snow_max_number', '50' );
-			add_option( 'db_snow_min_size_mobile', '10' );
-			add_option( 'db_snow_min_size_tablet', '12' );
-			add_option( 'db_snow_min_size', '15' );
-			add_option( 'db_snow_max_size_mobile', '30' );
-			add_option( 'db_snow_max_size_tablet', '40' );
-			add_option( 'db_snow_max_size', '50' );
-			add_option( 'db_snow_speed_mobile', '0.5' );
-			add_option( 'db_snow_speed_tablet', '0.5' );
-			add_option( 'db_snow_speed', '0.5' );
-			add_option( 'db_snow_color_1', '#b9e0f5' );
-			add_option( 'db_snow_color_2', '#7ec8ff' );
-			add_option( 'db_snow_color_3', '#7eb0ff' );
-			add_option( 'db_snow_color_4', '#8ab4ff' );
-			add_option( 'db_snow_color_5', '#afd0f5' );
-			add_option( 'db_snow_opacity_mobile', '0.5' );
-			add_option( 'db_snow_opacity_tablet', '0.5' );
-			add_option( 'db_snow_opacity', '0.5' );
+			add_option( 'db_snow_max_number',        '50' );
+			add_option( 'db_snow_min_size_mobile',   '10' );
+			add_option( 'db_snow_min_size_tablet',   '12' );
+			add_option( 'db_snow_min_size',          '15' );
+			add_option( 'db_snow_max_size_mobile',   '30' );
+			add_option( 'db_snow_max_size_tablet',   '40' );
+			add_option( 'db_snow_max_size',          '50' );
+			add_option( 'db_snow_speed_mobile',      '0.5' );
+			add_option( 'db_snow_speed_tablet',      '0.5' );
+			add_option( 'db_snow_speed',             '0.5' );
+			add_option( 'db_snow_color_1',           '#b9e0f5' );
+			add_option( 'db_snow_color_2',           '#7ec8ff' );
+			add_option( 'db_snow_color_3',           '#7eb0ff' );
+			add_option( 'db_snow_color_4',           '#8ab4ff' );
+			add_option( 'db_snow_color_5',           '#afd0f5' );
+			add_option( 'db_snow_opacity_mobile',    '0.5' );
+			add_option( 'db_snow_opacity_tablet',    '0.5' );
+			add_option( 'db_snow_opacity',           '0.5' );
 
-			add_filter( 'plugin_action_links_' . $this -> thisdir() . '/bisteinoff-snow.php', array(&$this, 'db_settings_link') );
-			add_action( 'admin_menu', array (&$this, 'admin') );
+			add_filter( 'plugin_action_links_' . $this -> thisdir() . '/bisteinoff-snow.php', array( &$this, 'db_settings_link' ) );
+			add_action( 'admin_menu', array( &$this, 'admin' ) );
 
 			add_action( 'admin_footer', function() {
-							wp_enqueue_style( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'css/admin.css', [], DB_FALLING_SNOWFLAKES_PLUGIN_VERSION, 'all' );
+							wp_enqueue_style( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'css/admin.min.css', [], DB_FALLING_SNOWFLAKES_PLUGIN_VERSION, 'all' );
 							wp_enqueue_style( 'wp-color-picker' );
 						},
 						99
 			);
 			add_action( 'admin_enqueue_scripts', function() {
-							wp_enqueue_script( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'js/admin.js', array( 'wp-color-picker' ), DB_FALLING_SNOWFLAKES_PLUGIN_VERSION, true );
+							wp_enqueue_script( $this -> thisdir() . '-admin', plugin_dir_url( __FILE__ ) . 'js/admin.min.js', array( 'wp-color-picker' ), DB_FALLING_SNOWFLAKES_PLUGIN_VERSION, true );
 						},
 						99
 			);
@@ -111,21 +105,26 @@ if ( ! class_exists( 'DB_SNOW_Settings' ) ) :
 						$db_today >= ( $db_this_year - 1) . $db_date1 && $db_today <= $db_this_year . $db_date2 ||
 						$db_today >= $db_this_year . $db_date1 && $db_today <= ( $db_this_year + 1) . $db_date2
 					)
-				)
-				if ( !is_admin() )
-					{
+				) :
+				if ( !is_admin() ) :
 						add_action( 'wp_enqueue_scripts', function() {
-							wp_enqueue_script( $this -> thisdir(), plugin_dir_url( __FILE__ ) . 'js/snow.js', array( 'jquery' ), DB_FALLING_SNOWFLAKES_PLUGIN_VERSION, true );
+							wp_enqueue_script( $this -> thisdir(), plugin_dir_url( __FILE__ ) . 'js/snow.min.js', array( 'jquery' ), DB_FALLING_SNOWFLAKES_PLUGIN_VERSION, true );
 						});
 						add_action( 'wp_footer', array (&$this, 'footer_js') );
-					}
+				endif;
+			endif;
+
+		}
+
+		function thisdir() {
+
+			return basename( __DIR__ );
 
 		}
 
 		function admin() {
 
-			if ( function_exists( 'add_menu_page' ) )
-			{
+			if ( function_exists( 'add_menu_page' ) ) :
 
 				$icon = '<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="43.3492mm" height="43.3492mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
 				viewBox="0 0 4335 4335"
@@ -163,30 +162,28 @@ if ( ! class_exists( 'DB_SNOW_Settings' ) ) :
 				</svg>';
 
 				add_menu_page(
-					esc_html__('DB Snow Flakes Settings' , 'db-falling-snowflakes' ),
-					esc_html__('DB Snow Flakes' , 'db-falling-snowflakes' ),
+					esc_html__( 'DB Snow Flakes Settings', 'db-falling-snowflakes' ),
+					esc_html__( 'DB Snow Flakes', 'db-falling-snowflakes' ),
 					'manage_options',
 					$this -> thisdir(),
-					array (&$this, 'admin_page_callback'),
+					array( &$this, 'admin_page_callback' ),
 					'data:image/svg+xml;base64,' . base64_encode( $icon ),
 					27
 					);
 
-			}
+			endif;
 
 		}
 
-		function admin_page_callback()
-		{
+		function admin_page_callback() {
 
-			require_once('inc/admin.php');
+			require_once( 'inc/admin.php' );
 
 		}
 
-		function db_settings_link( $links )
-		{
+		function db_settings_link( $links ) {
 
-			$url = esc_url ( add_query_arg (
+			$url = esc_url( add_query_arg(
 				'page',
 				$this -> thisdir(),
 				get_admin_url() . 'admin.php'
@@ -203,32 +200,31 @@ if ( ! class_exists( 'DB_SNOW_Settings' ) ) :
 
 		}
 
-		function footer_js()
-		{
+		function footer_js() {
 
 			$db_snow_max_number_mobile = (int) get_option( 'db_snow_max_number_mobile' );
 			$db_snow_max_number_tablet = (int) get_option( 'db_snow_max_number_tablet' );
-			$db_snow_max_number = (int) get_option( 'db_snow_max_number' );
-			$db_snow_min_size_mobile = (int) get_option( 'db_snow_min_size_mobile' );
-			$db_snow_min_size_tablet = (int) get_option( 'db_snow_min_size_tablet' );
-			$db_snow_min_size = (int) get_option( 'db_snow_min_size' );
-			$db_snow_max_size_mobile = (int) get_option( 'db_snow_max_size_mobile' );
-			$db_snow_max_size_tablet = (int) get_option( 'db_snow_max_size_tablet' );
-			$db_snow_max_size = (int) get_option( 'db_snow_max_size' );
-			$db_snow_speed_mobile = (float) get_option( 'db_snow_speed_mobile' );
-			$db_snow_speed_tablet = (float) get_option( 'db_snow_speed_tablet' );
-			$db_snow_speed = (float) get_option( 'db_snow_speed' );
-			$db_snow_colors = array(
+			$db_snow_max_number        = (int) get_option( 'db_snow_max_number' );
+			$db_snow_min_size_mobile   = (int) get_option( 'db_snow_min_size_mobile' );
+			$db_snow_min_size_tablet   = (int) get_option( 'db_snow_min_size_tablet' );
+			$db_snow_min_size          = (int) get_option( 'db_snow_min_size' );
+			$db_snow_max_size_mobile   = (int) get_option( 'db_snow_max_size_mobile' );
+			$db_snow_max_size_tablet   = (int) get_option( 'db_snow_max_size_tablet' );
+			$db_snow_max_size          = (int) get_option( 'db_snow_max_size' );
+			$db_snow_speed_mobile      = (float) get_option( 'db_snow_speed_mobile' );
+			$db_snow_speed_tablet      = (float) get_option( 'db_snow_speed_tablet' );
+			$db_snow_speed             = (float) get_option( 'db_snow_speed' );
+			$db_snow_colors = [
 				'Colors',
 				get_option( 'db_snow_color_1' ),
 				get_option( 'db_snow_color_2' ),
 				get_option( 'db_snow_color_3' ),
 				get_option( 'db_snow_color_4' ),
 				get_option( 'db_snow_color_5' )
-			);
-			$db_snow_opacity_mobile = (float) get_option( 'db_snow_opacity_mobile' );
-			$db_snow_opacity_tablet = (float) get_option( 'db_snow_opacity_tablet' );
-			$db_snow_opacity = (float) get_option( 'db_snow_opacity' );
+			];
+			$db_snow_opacity_mobile    = (float) get_option( 'db_snow_opacity_mobile' );
+			$db_snow_opacity_tablet    = (float) get_option( 'db_snow_opacity_tablet' );
+			$db_snow_opacity           = (float) get_option( 'db_snow_opacity' );
 
 		?><script type="text/javascript">
 
@@ -236,23 +232,44 @@ if ( ! class_exists( 'DB_SNOW_Settings' ) ) :
 				for ( $i = 1; $i <= 5; $i++ )
 					echo ",'" . esc_html( sanitize_hex_color( (string) $db_snow_colors[ $i ] ) ) . "'"; 
 			?>);
-			let dbSnowFlakesMaxNumberMobile = <?php echo esc_html( sanitize_text_field( $db_snow_max_number_mobile ) ); ?>;
-            let dbSnowFlakesMinSizeMobile = <?php echo esc_html( sanitize_text_field( $db_snow_min_size_mobile ) ); ?>;
-            let dbSnowFlakesMaxSizeMobile = <?php echo esc_html( sanitize_text_field( $db_snow_max_size_mobile ) ); ?>;
-            let dbSnowFlakesSpeedMobile = <?php echo esc_html( sanitize_text_field( $db_snow_speed_mobile ) ); ?>;
-            let dbSnowFlakesOpacityMobile = <?php echo esc_html( sanitize_text_field( $db_snow_opacity_mobile ) ); ?>;
-			let dbSnowFlakesMaxNumberTablet = <?php echo esc_html( sanitize_text_field( $db_snow_max_number_tablet ) ); ?>;
-            let dbSnowFlakesMinSizeTablet = <?php echo esc_html( sanitize_text_field( $db_snow_min_size_tablet ) ); ?>;
-            let dbSnowFlakesMaxSizeTablet = <?php echo esc_html( sanitize_text_field( $db_snow_max_size_tablet ) ); ?>;
-            let dbSnowFlakesSpeedTablet = <?php echo esc_html( sanitize_text_field( $db_snow_speed_tablet ) ); ?>;
-            let dbSnowFlakesOpacityTablet = <?php echo esc_html( sanitize_text_field( $db_snow_opacity_tablet ) ); ?>;
+			let dbSnowFlakesMaxNumberMobile  = <?php echo esc_html( sanitize_text_field( $db_snow_max_number_mobile ) ); ?>;
+			let dbSnowFlakesMinSizeMobile    = <?php echo esc_html( sanitize_text_field( $db_snow_min_size_mobile ) ); ?>;
+			let dbSnowFlakesMaxSizeMobile    = <?php echo esc_html( sanitize_text_field( $db_snow_max_size_mobile ) ); ?>;
+			let dbSnowFlakesSpeedMobile      = <?php echo esc_html( sanitize_text_field( $db_snow_speed_mobile ) ); ?>;
+			let dbSnowFlakesOpacityMobile    = <?php echo esc_html( sanitize_text_field( $db_snow_opacity_mobile ) ); ?>;
+			let dbSnowFlakesMaxNumberTablet  = <?php echo esc_html( sanitize_text_field( $db_snow_max_number_tablet ) ); ?>;
+			let dbSnowFlakesMinSizeTablet    = <?php echo esc_html( sanitize_text_field( $db_snow_min_size_tablet ) ); ?>;
+			let dbSnowFlakesMaxSizeTablet    = <?php echo esc_html( sanitize_text_field( $db_snow_max_size_tablet ) ); ?>;
+			let dbSnowFlakesSpeedTablet      = <?php echo esc_html( sanitize_text_field( $db_snow_speed_tablet ) ); ?>;
+			let dbSnowFlakesOpacityTablet    = <?php echo esc_html( sanitize_text_field( $db_snow_opacity_tablet ) ); ?>;
 			let dbSnowFlakesMaxNumberDesktop = <?php echo esc_html( sanitize_text_field( $db_snow_max_number ) ); ?>;
-			let dbSnowFlakesMinSizeDesktop = <?php echo esc_html( sanitize_text_field( $db_snow_min_size ) ); ?>;
-			let dbSnowFlakesMaxSizeDesktop = <?php echo esc_html( sanitize_text_field( $db_snow_max_size ) ); ?>;
-			let dbSnowFlakesSpeedDesktop = <?php echo esc_html( sanitize_text_field( $db_snow_speed ) ); ?>;
-			let dbSnowFlakesOpacityDesktop = <?php echo esc_html( sanitize_text_field( $db_snow_opacity ) ); ?>;
+			let dbSnowFlakesMinSizeDesktop   = <?php echo esc_html( sanitize_text_field( $db_snow_min_size ) ); ?>;
+			let dbSnowFlakesMaxSizeDesktop   = <?php echo esc_html( sanitize_text_field( $db_snow_max_size ) ); ?>;
+			let dbSnowFlakesSpeedDesktop     = <?php echo esc_html( sanitize_text_field( $db_snow_speed ) ); ?>;
+			let dbSnowFlakesOpacityDesktop   = <?php echo esc_html( sanitize_text_field( $db_snow_opacity ) ); ?>;
 		</script><?php
-			
+
+		}
+
+		function icon( $image, $width, $height, $title, $description = '', $class = '' ) {
+
+			$html =
+				'<div class="db-snow-block-icon' . ( empty( $class ) ? '' : ' ' . esc_attr( $class ) ) . '">' .
+					'<div class="db-snow-block-icon-img">' .
+						'<img src="' . esc_url( plugins_url( $image ) ) . '" width="' . esc_attr( $width ) . '" height="' . esc_attr( $height ) . '" alt="' . esc_attr( $title ) . '" title="' . esc_attr( $title ) . '" />' .
+					'</div>' .
+					'<div class="db-snow-block-icon-info">' .
+						'<div class="db-snow-block-icon-title">' . esc_html( $title ) . '</div>';
+
+			if ( !empty( $description ) ) :
+				$html .= '<div class="db-snow-block-icon-description db-snow-field-description">' . esc_html( $description ) . '</div>';
+			endif;
+
+			$html .=
+					'</div>' .
+				'</div>';
+
+			return $html;
 		}
 
 	}

@@ -1,13 +1,13 @@
 <?php // THE SETTINGS PAGE
 
-	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+	if ( !defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 	$baseObj = new DB_SNOW_Settings();
 	$d = $baseObj -> thisdir(); // domain for translate.wordpress.org
 
-	$db_snow_start_day = (int) get_option( 'db_snow_start_day' );
-	$db_snow_start_month = (int) get_option( 'db_snow_start_month' );
-	$db_snow_finish_day = (int) get_option( 'db_snow_finish_day' );
+	$db_snow_start_day    = (int) get_option( 'db_snow_start_day' );
+	$db_snow_start_month  = (int) get_option( 'db_snow_start_month' );
+	$db_snow_finish_day   = (int) get_option( 'db_snow_finish_day' );
 	$db_snow_finish_month = (int) get_option( 'db_snow_finish_month' );
 
 	$db_snow_max_number_mobile = (int) get_option( 'db_snow_max_number_mobile' );
@@ -28,11 +28,11 @@
 
 	$db_snow_colors = array(
 		'Colors',
-		sanitize_hex_color ( get_option('db_snow_color_1') ),
-		sanitize_hex_color ( get_option('db_snow_color_2') ),
-		sanitize_hex_color ( get_option('db_snow_color_3') ),
-		sanitize_hex_color ( get_option('db_snow_color_4') ),
-		sanitize_hex_color ( get_option('db_snow_color_5') )
+		sanitize_hex_color( get_option('db_snow_color_1') ),
+		sanitize_hex_color( get_option('db_snow_color_2') ),
+		sanitize_hex_color( get_option('db_snow_color_3') ),
+		sanitize_hex_color( get_option('db_snow_color_4') ),
+		sanitize_hex_color( get_option('db_snow_color_5') )
 	);
 
 	$db_snow_opacity_mobile = (float) get_option( 'db_snow_opacity_mobile' );
@@ -46,7 +46,7 @@
 
 		if ( function_exists( 'current_user_can' ) &&
 			 !current_user_can( 'manage_options' ) )
-				die( esc_html_e( 'Error: You do not have the permission to update the value' , 'db-falling-snowflakes' ) );
+				die( esc_html_e( 'Error: You do not have the permission to update the value', 'db-falling-snowflakes' ) );
 
 		if ( isset( $_POST[ 'start_day' ] ) )
 			$db_snow_start_day = (int) esc_html( sanitize_text_field( wp_unslash( $_POST[ 'start_day' ] ) ) );
@@ -172,6 +172,22 @@
 
 	}
 
+	$db_months = [
+		esc_html__( 'Month', 'db-falling-snowflakes' ),
+		esc_html__( 'January', 'db-falling-snowflakes' ),
+		esc_html__( 'February', 'db-falling-snowflakes' ),
+		esc_html__( 'March', 'db-falling-snowflakes' ),
+		esc_html__( 'April', 'db-falling-snowflakes' ),
+		esc_html__( 'May', 'db-falling-snowflakes' ),
+		esc_html__( 'June', 'db-falling-snowflakes' ),
+		esc_html__( 'July', 'db-falling-snowflakes' ),
+		esc_html__( 'August', 'db-falling-snowflakes' ),
+		esc_html__( 'September', 'db-falling-snowflakes' ),
+		esc_html__( 'October', 'db-falling-snowflakes' ),
+		esc_html__( 'November', 'db-falling-snowflakes' ),
+		esc_html__( 'December', 'db-falling-snowflakes' ),
+	];
+
 ?>
 <div class='wrap db-snow-admin'>
 
@@ -189,7 +205,11 @@
 
 					<table class="form-table db-snow-table" width="100%">
 						<tr valign="top">
-							<th scope="row" width="60%">
+							<th scope="rowgroup" rowspan="2" width="30%" class="db-snow-bg-highlight db-snow-table-border-bottom-left-radius">
+								<?php esc_html_e( 'Period of activity' , 'db-falling-snowflakes' ) ?>
+								<div class="db-snow-field-description"><?php esc_html_e( 'Set when the plugin is active' , 'db-falling-snowflakes' ) ?></div>
+							</th>
+							<th scope="row" width="30%">
 								<?php esc_html_e( 'Start on' , 'db-falling-snowflakes' ) ?>
 							</th>
 							<td width="20%">
@@ -207,20 +227,21 @@
 							</td>
 							<td width="20%">
 								<select type="text" name="start_month" id="db_snow_start_month">
-									<option value="0" disabled><?php esc_html_e( 'Month' , 'db-falling-snowflakes' ) ?></option>
-								<?php
-									for ( $i = 1; $i <= 12 ; $i++ )
-									{
-								?>
-									<option value="<?php echo esc_html( sanitize_text_field( $i ) ) ?>" <?php selected( $db_snow_start_month, $i ); ?>><?php echo esc_html( sanitize_text_field( strftime( '%B' , strtotime ( "{$i}/01/2000" ) ) ) ) ?></option>
-								<?php
-									}
-								?>
+									<?php
+										foreach( $db_months as $db_month_id => $db_month ) :
+										?>
+											<option value="<?php echo esc_html( sanitize_text_field( $db_month_id ) ) ?>" <?php
+												if ( $db_month_id === 0 ) echo esc_html( 'disabled' ); 
+												else selected( $db_snow_start_month, $db_month_id );
+											?>><?php echo esc_html( sanitize_text_field( $db_month ) ) ?></option>
+										<?php
+										endforeach;
+									?>
 								</select>
 							</td>
 						</tr>
 						<tr valign="top">
-							<th scope="row">
+							<th scope="row" class="db-snow-after-rowspan">
 								<?php esc_html_e( 'Stop on' , 'db-falling-snowflakes' ) ?>
 							</th>
 							<td>
@@ -238,22 +259,23 @@
 							</td>
 							<td>
 								<select type="text" name="finish_month" id="db_snow_finish_month">
-									<option value="0" disabled><?php esc_html_e( 'Month' , 'db-falling-snowflakes' ) ?></option>
-								<?php
-									for ( $i = 1; $i <= 12 ; $i++ )
-									{
-								?>
-									<option value="<?php echo esc_html( sanitize_text_field( $i ) ) ?>" <?php selected( $db_snow_finish_month, $i ); ?>><?php echo esc_html( sanitize_text_field( strftime( '%B' , strtotime ( "{$i}/01/2000" ) ) ) ) ?></option>
-								<?php
-									}
-								?>
+									<?php
+										foreach( $db_months as $db_month_id => $db_month ) :
+										?>
+											<option value="<?php echo esc_html( sanitize_text_field( $db_month_id ) ) ?>" <?php
+												if ( $db_month_id === 0 ) echo esc_html( 'disabled' ); 
+												else selected( $db_snow_finish_month, $db_month_id );
+											?>><?php echo esc_html( sanitize_text_field( $db_month ) ) ?></option>
+										<?php
+										endforeach;
+									?>
 								</select>
 							</td>
 						</tr>
 					</table>
 					<table class="form-table db-snow-table" width="100%">
 						<tr valign="top">
-							<th scope="rowgroup" rowspan="5" width="30%">
+							<th scope="rowgroup" rowspan="5" width="30%" class="db-snow-bg-highlight db-snow-table-border-bottom-left-radius">
 								<?php esc_html_e( 'Colors' , 'db-falling-snowflakes' ) ?>
 								<div class="db-snow-field-description"><?php esc_html_e( 'Choose 5 colors of the snowflakes. The color of every other snowflake will be chosen randomly from these five ones' , 'db-falling-snowflakes' ) ?></div>
 							</th>
@@ -304,21 +326,27 @@
 					</table>
 					<table class="form-table db-snow-table" width="100%">
 						<tr valign="top">
-							<th scope="rowgroup" width="25%">
+							<th scope="rowgroup" width="25%" class="db-snow-bg-highlight">
 								<?php esc_html_e( 'Parameters' , 'db-falling-snowflakes' ) ?>
 								<div class="db-snow-field-description"><?php esc_html_e( 'Customization of the performance of the snowflakes' , 'db-falling-snowflakes' ) ?></div>
 							</th>
-							<th width="25%">
-								<?php esc_html_e( 'Mobile' , 'db-falling-snowflakes' ) ?>
-								<div class="db-snow-field-description">&lt;=576px</div>
+							<th width="25%" class="db-snow-bg-highlight">
+								<?php
+									$html = $baseObj->icon( $d . '/img/mobile.svg', 18, 18, esc_html__( 'Mobile' , 'db-falling-snowflakes' ), '&le;576px', 'db-snow-block-icon-top db-snow-block-icon-center' );
+									echo wp_kses_post( $html );
+								?>
 							</th>
-							<th width="25%">
-								<?php esc_html_e( 'Tablet' , 'db-falling-snowflakes' ) ?>
-								<div class="db-snow-field-description">&lt;=992px</div>
+							<th width="25%" class="db-snow-bg-highlight">
+								<?php
+									$html = $baseObj->icon( $d . '/img/tablet.svg', 16, 16, esc_html__( 'Tablet' , 'db-falling-snowflakes' ), '&le;992px', 'db-snow-block-icon-top db-snow-block-icon-center' );
+									echo wp_kses_post( $html );
+								?>
 							</th>
-							<th width="25%">
-								<?php esc_html_e( 'Desktop' , 'db-falling-snowflakes' ) ?>
-								<div class="db-snow-field-description">&gt;992px</div>
+							<th width="25%" class="db-snow-bg-highlight">
+								<?php
+									$html = $baseObj->icon( $d . '/img/desktop.svg', 16, 16, esc_html__( 'Desktop' , 'db-falling-snowflakes' ), '&gt;992px', 'db-snow-block-icon-top db-snow-block-icon-center' );
+									echo wp_kses_post( $html );
+								?>
 							</th>
 						</tr>
 						<tr valign="top">
@@ -441,8 +469,8 @@
 			<div class="db-snow-col-4">
 
 				<div class="db-snow-logo">
-					
-					<a href="https://bisteinoff.com/" target="_blank"><img src="<?php echo esc_html( sanitize_text_field( plugins_url( $d . '/img/logo.png' ) ) ) ?>" width="200" height="42" alt="Bisteinoff Web Agency" title="Bisteinoff Web Agency" /></a>
+
+					<a href="https://bisteinoff.com/" target="_blank"><img src="<?php echo esc_url( sanitize_text_field( plugins_url( $d . '/img/logo.png' ) ) ) ?>" width="200" height="42" alt="Bisteinoff Web Agency" title="Bisteinoff Web Agency" /></a>
 
 				</div>
 
