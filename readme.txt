@@ -19,7 +19,7 @@ DB Falling Snowflakes is an easy solution to generate snowflakes falling down on
 
 == Installation ==
 
-1. Upload db-tagcloud folder to the `/wp-content/plugins/` directory
+1. Upload the plugin folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Enjoy
 
@@ -28,6 +28,7 @@ DB Falling Snowflakes is an easy solution to generate snowflakes falling down on
 = Which settings are available for me? =
 
 You can make the following settings:
+
 * Month / day when to start showing snow falling effect
 * Month / day when to stop
 * 5 colors: the color of every snowflake would be chosen randomly from these five ones
@@ -50,6 +51,7 @@ You can also activate the plugin only on several of the subsites if you don't ne
 = Is it possible to customize the parameters for mobile devices? =
 
 You can customize the following settings for mobile devices, tablets and desktops.
+
 * Maximum number of snowflakes
 * Minimum Size
 * Maximum Size
